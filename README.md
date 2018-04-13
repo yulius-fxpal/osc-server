@@ -1,7 +1,8 @@
 OSC Server
-----------
+==========
 
-#Python
+Python
+------
 
 Simple python osc server.  This is used w/ [OSCeleton-KinectSDK](https://github.com/Zillode/OSCeleton-KinectSDK/)
 
@@ -10,8 +11,8 @@ Simple python osc server.  This is used w/ [OSCeleton-KinectSDK](https://github.
 cd python
 python app.py --ip '0.0.0.0' --port 7110
 ```
-
-#Node.js
+Nodejs
+------
 
 Simple node.js osc server.  This is used w/ [KinectV2-OSC](https://github.com/microcosm/KinectV2-OSC)
 
