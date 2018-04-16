@@ -18,8 +18,20 @@ function getClockTime() { return new Date()/1000.0; }
 //   RIGHT_HAND: [ 308.52577090263367, -768.5120105743408, 2171.898126602173 ],
 //   RIGHT_HAND_c: 0 }
 
+
 function handleChannel(channel, msg, sock) {
-    console.log(channel, msg)
+    var m = "<><><>" + msg+"<><><>"
+    console.log(channel)
+    wstream.write(channel+"\r\n");
 }
 
 var kow = new KOW.KinOSCWatcher({msgWatcher: handleChannel, localAddress: '0.0.0.0'})
+
+var strftime = require('strftime');
+var d = new Date();
+var timestr = strftime('%Y%m%d_%H%M%S', d);
+
+
+var fs = require('fs');
+var wstream = fs.createWriteStream('skeltrack_'+timestr+'.csv');
+

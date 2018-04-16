@@ -37,16 +37,23 @@ Body.prototype.getSkelMessage = function()
 {
     var msg = {'msgType': 'kinect.skel', 'bodyId': this.id, 'time': this.lastTime};
     for (var jid in this.joints) {
-	//var id = Body.ALL_JOINTS[jid];
-	var id = Body.JOINTS[jid];
-	if (!id) {
-	    //id = jid;
-	    continue;
-	}
-	msg[id] = this.joints[jid];
-	msg[id+"_c"] = this.confidence[jid];
+  //var id = Body.ALL_JOINTS[jid];
+  var id = Body.JOINTS[jid];
+  if (!id) {
+      //id = jid;
+      continue;
+  }
+  msg[id] = this.joints[jid];
+  msg[id+"_c"] = this.confidence[jid];
     }
     return msg;
+}
+
+Body.prototype.getSkelMessageHeadOnly = function()
+{
+    if (typeof this.bodies != 'undefined')
+      console.log("#!!!!!!!!!!!#Num bodies: "+Object.keys(this.bodies).length);
+    return this.lastTime +','+ this.id+','+ this.joints["Head"]+','+ this.confidence["Head"]+',';
 }
 
 Body.ALL_JOINTS = {
@@ -164,12 +171,13 @@ KinOSCWatcher.prototype.handleBodiesMessage = function(msg)
         var stat = args[3];
 	body.confidence[jid] = stat == "Tracked" ? 1 : 0;
 	if (jid == "Head") {
-	    var smsg = body.getSkelMessage();
+	    var smsg = body.getSkelMessageHeadOnly();
 	    if (this.sock) {
-		this.sock.emit("kinect.skel", smsg);
+		this.sock.emit("kinect1.skel", smsg);
 	    }
 	    if (this.msgWatcher) {
-		this.msgWatcher("kinect.skel", smsg);
+//    this.msgWatcher("kinect2.skel", smsg);
+    this.msgWatcher(smsg);
 	    }
 	}
 	return;
@@ -183,23 +191,23 @@ KinOSCWatcher.prototype.handleBodiesMessage = function(msg)
 
 KinOSCWatcher.prototype.updateStatus = function()
 {
-    var t = KinOSCWatcher.getClockTime();
-    var dt = t - this.lastFrameTime;
+  var t = KinOSCWatcher.getClockTime();
+  var dt = t - this.lastFrameTime;
     //console.log("Last update: "+dt);
-    //console.log("Num bodies: "+Object.keys(this.bodies).length);
+    console.log("#############Num bodies: "+Object.keys(this.bodies).length);
     var deadBodyIds = [];
     for(var id in this.bodies) {
-	var body = this.bodies[id];
-	var dt = t - body.lastTime;
-        console.log("id: "+id+"  dt: "+dt);
-	if (dt > 5) {
-	    deadBodyIds.push(id);
-	}
-	//body.dump();
+       var body = this.bodies[id];
+       var dt = t - body.lastTime;
+       console.log(">>>>>id: "+id+"  dt: "+dt);
+       if (dt > 5) {
+         deadBodyIds.push(id);
+       }
+  	//body.dump();
     }
     deadBodyIds.forEach(id => {
-	console.log("Removing body "+id);
-	delete this.bodies[id];
+  	  console.log(">>>>>Removing body "+id);
+  	   delete this.bodies[id];
     });
 }
 
