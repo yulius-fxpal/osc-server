@@ -27,6 +27,11 @@ function handleChannel(channel, msg, sock) {
 
 var kow = new KOW.KinOSCWatcher({msgWatcher: handleChannel, localAddress: '0.0.0.0'})
 
+// var msg = {
+//     address: '/bodies/1/joints/Head',
+//     args: [  141.72270894050598, -815.0498867034912, 2572.237968444824 ]
+// }
+// kow.handleMessage(msg);
 var strftime = require('strftime');
 var d = new Date();
 var timestr = strftime('%Y%m%d_%H%M%S', d);
